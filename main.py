@@ -77,3 +77,4 @@ class Ecosystem:
 
     def run_simulation(self):
         pass
+print(si)
