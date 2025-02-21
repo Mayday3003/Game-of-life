@@ -47,7 +47,6 @@ class Ecosystem:
     cycle_count: int
     max_cycles: int
     
-    
 
     def __init__(self, size: int, max_cycles: int):
         if size == 0:
