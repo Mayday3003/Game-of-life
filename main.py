@@ -40,25 +40,27 @@ class Predator(Organism):
     def reproduces(self, can_reproduce: bool):
         pass
 
-@dataclass
+
 class Ecosystem:
     grid: List[List[Optional[Organism]]]
     organisms: List[Organism]
     cycle_count: int
     max_cycles: int
+    
+    
 
     def __init__(self, size: int, max_cycles: int):
         if size == 0:
             raise ValueError("The game cannot run if the matrix has no elements.")
-        self.grid = self.create_matrix_recursive(size)
+        self.grid = self.create_matrix_recursive(size, size)
         self.organisms = []
         self.cycle_count = 0
         self.max_cycles = max_cycles
 
-    def create_matrix_recursive(self, n: int) -> List[List[Optional[Organism]]]:
-        if n == 1:
-            return [[None] * n] 
-        return self.create_matrix_recursive(n - 1) + [[None] * n]  
+    def create_matrix_recursive(self, n: int, size: int) -> List[List[Optional[Organism]]]:
+        if n == 0:
+            return []
+        return self.create_matrix_recursive(n - 1, size) + [[None] * size]
 
     def add_organism(self, organism: Organism):
         pass
@@ -77,4 +79,3 @@ class Ecosystem:
 
     def run_simulation(self):
         pass
-print(si)
