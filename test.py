@@ -192,7 +192,6 @@ class Ecosystem:
         self.num_predators = 0
         self.cycle_count = 0
         self.plant_regeneration_interval = max_cycles // 3 if max_cycles >=3 else 1
-        self.previous_grid = None  # Guarda el estado anterior del ecosistema
         self.initialize_organisms()
 
     def create_matrix(self, rows: int, cols: int, matrix=None):
@@ -266,9 +265,6 @@ class Ecosystem:
         self.grid[new_x][new_y] = organism
 
     def update_ecosystem(self):
-        # TODO: Guardar el estado actual antes de actualizar
-        self.previous_grid = [[cell.get_symbol() if cell else '🤍' for cell in row] for row in self.grid]
-        
         if self.cycle_count % self.plant_regeneration_interval == 0:
             self.regenerate_plants(self.get_empty_cells([]))
         self.update_organisms(0)
@@ -302,13 +298,8 @@ class Ecosystem:
             print()
             return
         current_symbol = self.grid[row][col].get_symbol() if self.grid[row][col] else '🤍'
-        previous_symbol = self.previous_grid[row][col] if self.previous_grid else '🤍'
         
-        # Resaltar cambios con colores
-        if current_symbol != previous_symbol:
-            print(f"\033[91m{current_symbol}\033[0m", end=' ')  # Rojo para cambios
-        else:
-            print(current_symbol, end=' ')
+        print(current_symbol, end=' ')
         self.print_row(row, col + 1)
 
     def is_simulation_over(self):
