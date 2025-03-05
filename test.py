@@ -47,32 +47,74 @@ class Prey(Organism):
 
     def reproduces(self, ecosystem: 'Ecosystem'):
         positions = self.get_empty_adjacent(ecosystem)
-        if positions:
-            new_x, new_y = positions[0]
-            ecosystem.add_organism(Prey(new_x, new_y, 100, 0))
+        is_prey = self.is_prey_adjacent(ecosystem)
+
+        if is_prey:
+            if positions:
+                new_x, new_y = positions[0]
+                ecosystem.add_organism(Prey(new_x, new_y, 100, 0))
 
     def move(self, ecosystem: 'Ecosystem'):
-        positions = self.get_empty_adjacent(ecosystem)
+        positions = self.get_move_adjacent(ecosystem)
         if positions:
             new_x, new_y = positions[0]
             target = ecosystem.grid[new_x][new_y]
+
             if isinstance(target, Plant):
                 ecosystem.delete_organism(target)
                 self.energy += 10
             ecosystem.move_organism(self, new_x, new_y)
 
+    def get_move_adjacent(self, ecosystem: 'Ecosystem') -> List[Tuple[int, int]]:
+        return self.check_move_directions(ecosystem, [(0,1),(1,0),(0,-1),(-1,0)], 0, [])
+    
     def get_empty_adjacent(self, ecosystem: 'Ecosystem') -> List[Tuple[int, int]]:
-        return self.check_directions(ecosystem, [(0,1),(1,0),(0,-1),(-1,0)], 0, [])
+        return self.check_empty_directions(ecosystem, [(0,1),(1,0),(0,-1),(-1,0)], 0, [])
+    
+    def is_prey_adjacent(self, ecosystem: 'Ecosystem') -> List[Tuple[int, int]]:
+        if not self.check_reproduce_prey(ecosystem, [(0,1),(1,0),(0,-1),(-1,0)], 0, []):
+            return False
+        
+        return True
 
-    def check_directions(self, ecosystem, directions, index, acc):
+    def check_move_directions(self, ecosystem, directions, index, acc):
         if index >= len(directions):
             return acc
+        
         dx, dy = directions[index]
         nx, ny = self.x + dx, self.y + dy
+
         if 0 <= nx < ecosystem.size and 0 <= ny < ecosystem.size:
             if ecosystem.grid[nx][ny] is None or isinstance(ecosystem.grid[nx][ny], Plant):
                 acc.append((nx, ny))
-        return self.check_directions(ecosystem, directions, index+1, acc)
+
+        return self.check_move_directions(ecosystem, directions, index+1, acc)
+    
+    def check_empty_directions(self, ecosystem, directions, index, acc):
+        if index >= len(directions):
+            return acc
+        
+        dx, dy = directions[index]
+        nx, ny = self.x + dx, self.y + dy
+
+        if 0 <= nx < ecosystem.size and 0 <= ny < ecosystem.size:
+            if ecosystem.grid[nx][ny] is None:
+                acc.append((nx, ny))
+
+        return self.check_empty_directions(ecosystem, directions, index + 1, acc)
+    
+    def check_reproduce_prey(self, ecosystem, directions, index, preys):
+        if index >= len(directions):
+            return preys
+        
+        dx, dy = directions[index]
+        nx, ny = self.x + dx, self.y + dy
+
+        if 0 <= nx < ecosystem.size and 0 <= ny < ecosystem.size:
+            if isinstance(ecosystem.grid[nx][ny], Prey):
+                preys.append((nx, ny))
+
+        return self.check_reproduce_prey(ecosystem, directions, index + 1, preys)
 
     def get_symbol(self) -> str:
         return '🐔'
@@ -317,5 +359,5 @@ class Ecosystem:
         self.run_simulation()
 
 if __name__ == "__main__":
-    eco = Ecosystem(size=5, max_cycles=30)
+    eco = Ecosystem(size=15, max_cycles=30)
     eco.run_simulation()
