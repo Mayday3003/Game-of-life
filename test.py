@@ -37,7 +37,7 @@ class Plant(Organism):
         pass
 
     def get_symbol(self) -> str:
-        return 'H'
+        return '🌱'
 
 @dataclass
 class Prey(Organism):
@@ -75,7 +75,7 @@ class Prey(Organism):
         return self.check_directions(ecosystem, directions, index+1, acc)
 
     def get_symbol(self) -> str:
-        return 'C'
+        return '🐔'
 
 @dataclass
 class Predator(Organism):
@@ -178,7 +178,7 @@ class Predator(Organism):
         return self.check_directions(ecosystem, directions, index+1, acc)
 
     def get_symbol(self) -> str:
-        return 'L'
+        return '🦊'
 
 # ======================= Ecosistema =======================
 class Ecosystem:
@@ -266,8 +266,8 @@ class Ecosystem:
         self.grid[new_x][new_y] = organism
 
     def update_ecosystem(self):
-        # Guardar el estado actual antes de actualizar
-        self.previous_grid = [[cell.get_symbol() if cell else '.' for cell in row] for row in self.grid]
+        # TODO: Guardar el estado actual antes de actualizar
+        self.previous_grid = [[cell.get_symbol() if cell else '🤍' for cell in row] for row in self.grid]
         
         if self.cycle_count % self.plant_regeneration_interval == 0:
             self.regenerate_plants(self.get_empty_cells([]))
@@ -301,8 +301,8 @@ class Ecosystem:
         if col >= self.size:
             print()
             return
-        current_symbol = self.grid[row][col].get_symbol() if self.grid[row][col] else '.'
-        previous_symbol = self.previous_grid[row][col] if self.previous_grid else '.'
+        current_symbol = self.grid[row][col].get_symbol() if self.grid[row][col] else '🤍'
+        previous_symbol = self.previous_grid[row][col] if self.previous_grid else '🤍'
         
         # Resaltar cambios con colores
         if current_symbol != previous_symbol:
