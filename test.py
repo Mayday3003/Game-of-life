@@ -37,7 +37,7 @@ class Plant(Organism):
         pass
 
     def get_symbol(self) -> str:
-        return 'P'
+        return 'H'
 
 @dataclass
 class Prey(Organism):
@@ -70,7 +70,7 @@ class Prey(Organism):
         dx, dy = directions[index]
         nx, ny = self.x + dx, self.y + dy
         if 0 <= nx < ecosystem.size and 0 <= ny < ecosystem.size:
-            if ecosystem.grid[nx][ny] is None:
+            if ecosystem.grid[nx][ny] is None or isinstance(ecosystem.grid[nx][ny], Plant):
                 acc.append((nx, ny))
         return self.check_directions(ecosystem, directions, index+1, acc)
 
@@ -88,6 +88,7 @@ class Predator(Organism):
             self.health = 0
         if self.energy >= 50:
             self.reproduces(ecosystem)
+
 
     def reproduces(self, ecosystem: 'Ecosystem'):
         positions = self.get_empty_adjacent(ecosystem)
@@ -325,5 +326,5 @@ class Ecosystem:
         self.run_simulation()
 
 if __name__ == "__main__":
-    eco = Ecosystem(size=15, max_cycles=30)
+    eco = Ecosystem(size=5, max_cycles=30)
     eco.run_simulation()
