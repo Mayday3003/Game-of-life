@@ -354,7 +354,7 @@ class Ecosystem:
             return
         self.print_grid()
         input("Enter para siguiente ciclo...")
-        sys.stdout.write("\033[F\033[K" * (self.size + 3))
+        # sys.stdout.write("\033[F\033[K" * (self.size + 3))
         self.update_ecosystem()
         self.run_simulation()
 
